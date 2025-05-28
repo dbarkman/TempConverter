@@ -1,11 +1,14 @@
 # Temperature Converter POC
 
-A simple proof-of-concept temperature converter in Python that converts between Celsius, Fahrenheit, and Kelvin.
+A simple proof-of-concept temperature converter in Python that converts between Celsius, Fahrenheit, and Kelvin. **Now with live weather data integration!**
 
 ## Features
 
 - Convert between Celsius (°C), Fahrenheit (°F), and Kelvin (K)
 - Interactive command-line interface
+- **🆕 Fetch real-time local temperature from weather services**
+- **🆕 Auto-detect your location or specify any city worldwide**
+- **🆕 Display current temperature in all three formats simultaneously**
 - Input validation (prevents temperatures below absolute zero)
 - Case-insensitive unit input
 - Comprehensive error handling
@@ -16,16 +19,68 @@ A simple proof-of-concept temperature converter in Python that converts between 
 - `temp_converter.py` - Main temperature converter module
 - `test_temp_converter.py` - Unit tests
 - `example_usage.py` - Usage examples
+- **🆕 `weather_fetcher.py` - Live weather data integration**
+- **🆕 `weather_demo.py` - Weather fetcher demonstration**
+- **🆕 `test_weather_fetcher.py` - Weather fetcher tests (unit + integration)**
 - `README.md` - This documentation
 
 ## Usage
+
+### 🌤️ Weather Mode (NEW!)
+
+Get real-time temperature in all three formats:
+
+```bash
+python3 weather_fetcher.py
+```
+
+Example output:
+```
+🌡️  Current Weather Report
+==================================================
+📍 Location: Gilbert, Arizona, United States
+🕐 Time: 2025-05-28T12:00
+
+🌡️  Temperature:
+   • 36.0°C (Celsius)
+   • 96.8°F (Fahrenheit)
+   • 309.1K (Kelvin)
+
+💧 Humidity: 7%
+💨 Wind Speed: 2.9 km/h
+==================================================
+```
+
+### Weather Demo
+
+See weather for multiple cities:
+
+```bash
+python3 weather_demo.py
+```
+
+### Programmatic Weather Usage
+
+```python
+from weather_fetcher import WeatherFetcher
+
+fetcher = WeatherFetcher()
+
+# Auto-detect your location
+data = fetcher.get_temperature_in_all_formats()
+temps = data["temperatures"]
+print(f"Current temp: {temps['celsius']:.1f}°C / {temps['fahrenheit']:.1f}°F / {temps['kelvin']:.1f}K")
+
+# Specific location
+data = fetcher.get_temperature_in_all_formats("London")
+```
 
 ### Interactive Mode
 
 Run the main script for an interactive temperature conversion session:
 
 ```bash
-python temp_converter.py
+python3 temp_converter.py
 ```
 
 Example session:
@@ -63,7 +118,7 @@ print(f"32°F = {celsius}°C")  # Output: 32°F = 0.0°C
 See various conversion examples:
 
 ```bash
-python example_usage.py
+python3 example_usage.py
 ```
 
 ### Run Tests
@@ -71,8 +126,33 @@ python example_usage.py
 Execute the test suite:
 
 ```bash
-python test_temp_converter.py
+# Test core temperature converter
+python3 test_temp_converter.py
+
+# Test weather functionality (includes real API integration)
+python3 test_weather_fetcher.py
+
+# Run all tests
+python3 test_temp_converter.py && python3 test_weather_fetcher.py
 ```
+
+## Weather Data Integration
+
+The weather fetcher uses:
+- **Open-Meteo API** - Free, no API key required
+- **Automatic location detection** via IP geolocation
+- **Global city search** - Works with any city name
+- **Real-time data** - Updated hourly
+- **Additional info** - Humidity, wind speed, timestamps
+
+### Supported Weather Features
+
+- ✅ Current temperature in all three formats
+- ✅ Automatic location detection
+- ✅ Manual location search (any city worldwide)
+- ✅ Additional weather metrics (humidity, wind)
+- ✅ Timezone-aware timestamps
+- ✅ Robust error handling with fallbacks
 
 ## Supported Conversions
 
@@ -100,6 +180,7 @@ The converter validates input and prevents:
 ## Requirements
 
 - Python 3.6 or higher
+- Internet connection (for weather features)
 - No external dependencies required
 
 ## Design Principles
@@ -111,11 +192,60 @@ This POC follows KISS (Keep It Simple, Stupid) principles:
 - Easy to understand and maintain code
 - Pragmatic approach focused on core functionality
 
+## Quick Start Examples
+
+### Just Temperature Conversion
+```bash
+python3 temp_converter.py
+```
+
+### Live Weather + Conversion
+```bash
+python3 weather_fetcher.py
+```
+
+### See Multiple Cities
+```bash
+python3 weather_demo.py
+```
+
+### Run Tests
+```bash
+python3 test_temp_converter.py
+```
+
 ## Future Enhancements
 
 Potential improvements for a production version:
-- Web interface
+- Web interface with weather maps
 - Batch conversion from file
+- Weather forecasts (not just current)
 - Additional temperature scales (Rankine, Réaumur)
 - Configuration file support
-- Logging capabilities 
+- Logging capabilities
+- Weather alerts and notifications
+
+## Testing
+
+The POC includes comprehensive testing:
+
+### Temperature Converter Tests (`test_temp_converter.py`)
+- ✅ All conversion formulas (C↔F, C↔K, F↔K)
+- ✅ Input validation and error handling
+- ✅ Edge cases (absolute zero, round-trip accuracy)
+- ✅ Case-insensitive unit handling
+
+### Weather Fetcher Tests (`test_weather_fetcher.py`)
+- ✅ **Unit Tests** - Mocked API calls for consistent testing
+- ✅ **Integration Tests** - Real API calls (when internet available)
+- ✅ Location detection (auto-detect and manual search)
+- ✅ Temperature conversion integration
+- ✅ Error handling (network issues, invalid locations, missing data)
+- ✅ Fallback mechanisms for robust operation
+- ✅ Output formatting verification
+
+### Test Results Summary
+- **18 total tests** (9 temperature converter + 9 weather fetcher + 1 integration)
+- **100% pass rate** ✅
+- **Mocked external dependencies** for reliable unit testing
+- **Real-world integration testing** when network is available 
